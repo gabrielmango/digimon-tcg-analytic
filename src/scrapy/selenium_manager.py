@@ -4,6 +4,7 @@ from typing import Optional, Tuple
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -64,12 +65,14 @@ class SeleniumManager:
         iframe = self.driver.find_element(*iframe_locator)
         self.driver.switch_to.frame(iframe)
 
-    def escrever(self, locator: Tuple[By, str], texto: str, timeout: int = 10) -> None:
+    def escrever(self, locator: Tuple[By, str], texto: str, timeout: int = 10, enter: bool = False) -> None:
         """Localiza um campo e escreve um texto nele."""
         self._logger.logger.debug(f"Escrevendo no elemento {locator}: '{texto}'.")
         element = self.espera_carregar_elemento(locator, timeout)
         element.clear()
         element.send_keys(texto)
+        if enter:
+            element.send_keys(Keys.ENTER)
 
     def clicar(self, locator: Tuple[By, str], usar_js: bool = False, timeout: int = 30) -> None:
         """Localiza e clica em um elemento."""
